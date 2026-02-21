@@ -1,12 +1,11 @@
 package com.example.photostudio.repository;
 
 import com.example.photostudio.model.PhotoSession;
+import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
-
 
 @Repository
 public class PhotoSessionRepository {
@@ -63,7 +62,6 @@ public class PhotoSessionRepository {
                     break;
                 }
             }
-
         }
         return photoSession;
     }
@@ -73,12 +71,10 @@ public class PhotoSessionRepository {
     }
 
     public PhotoSession findById(Long id) {
-        for (PhotoSession photoSession : storage) {
-            if (photoSession.getId().equals(id)) {
-                return photoSession;
-            }
-        }
-        return null;
+        return storage.stream()
+                .filter(session -> session.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     public void deleteById(Long id) {
@@ -86,52 +82,31 @@ public class PhotoSessionRepository {
     }
 
     public boolean existById(Long id) {
-        for (PhotoSession photoSession : storage) {
-            if (photoSession.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
+        return storage.stream().anyMatch(session -> session.getId().equals(id));
     }
 
     public List<PhotoSession> findByFirstNameAndLastName(String clientName, String clientLastName) {
-        List<PhotoSession> result = new ArrayList<>();
-        for (PhotoSession photoSession : storage) {
-            if (photoSession.getClientLastName().equalsIgnoreCase(clientLastName)
-                    && (photoSession.getClientName().equalsIgnoreCase(clientName))) {
-                result.add(photoSession);
-            }
-        }
-        return result;
+        return storage.stream()
+                .filter(session -> session.getClientLastName().equalsIgnoreCase(clientLastName)
+                        && session.getClientName().equalsIgnoreCase(clientName))
+                .toList();
     }
 
     public List<PhotoSession> findByClientName(String clientName) {
-        List<PhotoSession> result = new ArrayList<>();
-        for (PhotoSession photoSession : storage) {
-            if (photoSession.getClientName().equalsIgnoreCase(clientName)) {
-                result.add(photoSession);
-            }
-        }
-        return result;
+        return storage.stream()
+                .filter(session -> session.getClientName().equalsIgnoreCase(clientName))
+                .toList();
     }
 
     public List<PhotoSession> findByStatus(String status) {
-        List<PhotoSession> result = new ArrayList<>();
-        for (PhotoSession photoSession : storage) {
-            if (photoSession.getStatus().equalsIgnoreCase(status)) {
-                result.add(photoSession);
-            }
-        }
-        return result;
+        return storage.stream()
+                .filter(session -> session.getStatus().equalsIgnoreCase(status))
+                .toList();
     }
 
     public List<PhotoSession> findByPhotographer(String photographer) {
-        List<PhotoSession> result = new ArrayList<>();
-        for (PhotoSession photoSession : storage) {
-            if (photoSession.getPhotographer().equalsIgnoreCase(photographer)) {
-                result.add(photoSession);
-            }
-        }
-        return result;
+        return storage.stream()
+                .filter(session -> session.getPhotographer().equalsIgnoreCase(photographer))
+                .toList();
     }
 }

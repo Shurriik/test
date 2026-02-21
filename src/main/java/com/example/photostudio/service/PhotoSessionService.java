@@ -6,19 +6,15 @@ import com.example.photostudio.dto.PhotoSessionResponseDto;
 import com.example.photostudio.mapper.PhotoSessionMapper;
 import com.example.photostudio.model.PhotoSession;
 import com.example.photostudio.repository.PhotoSessionRepository;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PhotoSessionService {
     private final PhotoSessionMapper mapper;
     private final PhotoSessionRepository repository;
-
-    public PhotoSessionService(PhotoSessionMapper mapper, PhotoSessionRepository repository) {
-        this.mapper = mapper;
-        this.repository = repository;
-    }
 
     public List<PhotoSessionResponseDto> getAllPhotoSessions() {
         return repository.findAll()
@@ -52,8 +48,7 @@ public class PhotoSessionService {
     }
 
     public List<PhotoSessionAdminResponseDto> 
-        getPhotoSessionForAdminClientFullName(String clientLastName,
-            String clientName) {
+        getPhotoSessionForAdminClientFullName(String clientLastName, String clientName) {
         return repository.findByFirstNameAndLastName(clientName, clientLastName)
                 .stream()
                 .map(mapper::toAdminResponseDto)
